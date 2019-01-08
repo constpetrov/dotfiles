@@ -1,13 +1,11 @@
 export LC_ALL=en_US.UTF-8  
 export LANG=en_US.UTF-8
 export PGDATA=/usr/local/var/postgres/
-export PATH=$PATH:/Users/kpetrov/.local/bin:/Users/kpetrov/Library/Python/3.6/bin
+export PATH="/usr/local/opt/node@6/bin:$PATH:/Users/kpetrov/.local/bin:/Users/kpetrov/Library/Python/3.6/bin"
 if [ -f $(brew --prefix)/etc/bash_completion ]; then
 	  . $(brew --prefix)/etc/bash_completion
   fi
 
-# export PS1='[\u@mbp \w$(__git_ps1)]\$ '
-# export PS1="[\[$(tput sgr0)\]\[\033[38;5;2m\]\u\[$(tput sgr0)\]\[\033[38;5;15m\] \h]\[$(tput sgr0)\]\[\033[38;5;159m\]\w\[$(tput sgr0)\]\[\033[38;5;15m\] \\$ \[$(tput sgr0)\]"
 export PS1="\h:\w\\$ \[$(tput sgr0)\]"
 
 test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
@@ -45,23 +43,13 @@ alias mkdir='mkdir -pv'
 ## Slidy alias for asciidoc
 alias slidy='asciidoc --backend slidy'
 
-## The java selector
-function setjdk() {
-  if [ $# -ne 0 ]; then
-   removeFromPath '/System/Library/Frameworks/JavaVM.framework/Home/bin'
-   if [ -n "${JAVA_HOME+x}" ]; then
-    removeFromPath $JAVA_HOME
-   fi
-   export JAVA_HOME=`/usr/libexec/java_home -v $@`
-   export PATH=$JAVA_HOME/bin:$PATH
-  fi
- }
-function removeFromPath() {
-  export PATH=$(echo $PATH | sed -E -e "s;:$1;;" -e "s;$1:?;;")
-}
-setjdk 1.8
+alias cn='cal -NA 2'
 
-function lb() {
-    vim ~/logbook/$(date '+%Y-%m-%d').md
-}
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/Users/kpetrov/.sdkman"
+[[ -s "/Users/kpetrov/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/kpetrov/.sdkman/bin/sdkman-init.sh"
+export PATH="/usr/local/opt/node@8/bin:$PATH"
 
+alias t='todo.sh'
+alias j='jrnl'
+alias w='jrnl work'
