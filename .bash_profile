@@ -1,12 +1,12 @@
 export LC_ALL=en_US.UTF-8  
 export LANG=en_US.UTF-8
 export PGDATA=/usr/local/var/postgres/
-export PATH="/usr/local/opt/node@6/bin:$PATH:/Users/kpetrov/.local/bin:/Users/kpetrov/Library/Python/3.6/bin"
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-	  . $(brew --prefix)/etc/bash_completion
-  fi
+export PATH="$PATH:/Users/kpetrov/.local/bin:/Users/kpetrov/Library/Python/3.6/bin"
 
-export PS1="\h:\w\\$ \[$(tput sgr0)\]"
+[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+
+# export PS1="\h:\w\\$ \[$(tput sgr0)\]"
+export PS1="\[\033[48;5;22m\]\h\[$(tput sgr0)\]\[\033[48;5;-1m\]:\w\\$ \[$(tput sgr0)\]"
 
 test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
 
@@ -48,8 +48,18 @@ alias cn='cal -NA 2'
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="/Users/kpetrov/.sdkman"
 [[ -s "/Users/kpetrov/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/kpetrov/.sdkman/bin/sdkman-init.sh"
-export PATH="/usr/local/opt/node@8/bin:$PATH"
+
+# NVM loading
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 alias t='todo.sh'
+alias tw='todo.sh ls work'
+alias tp='todo.sh ls pers'
 alias j='jrnl'
 alias w='jrnl work'
+alias жрнл='jrnl'
+function today() {
+    find ~/own -name "*`date +%Y%m%d`*.md" -exec cat {} \; | less
+}

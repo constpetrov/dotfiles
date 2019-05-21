@@ -11,8 +11,8 @@ silent! map <F3> :NERDTreeFind<CR>
 let g:NERDTreeMapActivateNode="<F3>"
 let g:NERDTreeMapPreview="<F4>"
 
-:nnoremap <F5> "=strftime("%H:%M:%S")<CR>P
-:inoremap <F5> <C-R>=strftime("%H:%M:%S")<CR>
+:nnoremap <F5> "=strftime("%Y-%m-%d %H:%M")<CR>P
+:inoremap <F5> <C-R>=strftime("%Y-%m-%d %H:%M")<CR>
 
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
