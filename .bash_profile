@@ -5,7 +5,6 @@ export PATH="$PATH:/Users/kpetrov/.local/bin:/Users/kpetrov/Library/Python/3.6/b
 
 [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
 
-# export PS1="\h:\w\\$ \[$(tput sgr0)\]"
 export PS1="\[\033[48;5;22m\]\h\[$(tput sgr0)\]\[\033[48;5;-1m\]:\w\\$ \[$(tput sgr0)\]"
 
 test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
@@ -40,9 +39,6 @@ alias fgrep='fgrep --color=auto'
 ## Create parent directories on demand
 alias mkdir='mkdir -pv'
 
-## Slidy alias for asciidoc
-alias slidy='asciidoc --backend slidy'
-
 alias cn='cal -NA 2'
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
@@ -60,6 +56,3 @@ alias tp='todo.sh ls pers'
 alias j='jrnl'
 alias w='jrnl work'
 alias жрнл='jrnl'
-function today() {
-    find ~/own -name "*`date +%Y%m%d`*.md" -exec cat {} \; | less
-}
