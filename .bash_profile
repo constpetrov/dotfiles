@@ -1,7 +1,7 @@
 export LC_ALL=en_US.UTF-8  
 export LANG=en_US.UTF-8
 export PGDATA=/usr/local/var/postgres/
-export PATH="$PATH:/Users/kpetrov/.local/bin:/Users/kpetrov/Library/Python/3.6/bin"
+export PATH="$PATH:/Users/kpetrov/.local/bin:/Users/kpetrov/Library/Python/3.6/bin:/usr/local/opt/postgresql@10/bin"
 
 [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
 
