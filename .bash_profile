@@ -50,9 +50,5 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-alias t='todo.sh'
-alias tw='todo.sh ls work'
-alias tp='todo.sh ls pers'
-alias j='jrnl'
-alias w='jrnl work'
-alias жрнл='jrnl'
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
