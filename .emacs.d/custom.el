@@ -20,9 +20,6 @@
       "* %?%^g
 Entered on %U" :kill-buffer t))))
  '(package-selected-packages (quote (org))))
-(setq org-capture-templates
-      '(("j" "Journal" entry (file+datetree "~/org/journal.org")
-         "* %?%^g\nEntered on %U")))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
