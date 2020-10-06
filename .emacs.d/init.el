@@ -18,6 +18,9 @@
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
+;; Add russian layout in emacs, independent from system
+(setq default-input-method "russian-computer")
+
 ;; Initialize package sources
 (require 'package)
 
@@ -61,5 +64,69 @@
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 15)))
 
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file t)
+;; Line numbers
+(column-number-mode)
+(global-display-line-numbers-mode t)
+;; Disable for some modes
+(dolist (mode '(org-mode-hook
+		term-mode-hook
+		eshell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+;; Org settings
+(defun air-org-skip-subtree-if-priority (priority)
+  "Skip an agenda subtree if it has a priority of PRIORITY.
+
+PRIORITY may be one of the characters ?A, ?B, or ?C."
+  (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+        (pri-value (* 1000 (- org-lowest-priority priority)))
+        (pri-current (org-get-priority (thing-at-point 'line t))))
+    (if (= pri-value pri-current)
+        subtree-end
+      nil)))
+
+(setq org-agenda-custom-commands
+   '(("n" "Agenda and all TODOs"
+      ((tags "PRIORITY=\"A\""
+	     ((org-agenda-skip-function
+	       '(org-agenda-skip-entry-if 'todo 'done))
+	      (org-agenda-overriding-header "High-priority unfinished tasks:")))
+       (agenda ""
+	       ((org-agenda-span 2)))
+       (alltodo ""
+		((org-agenda-skip-function
+		  '(or
+		    (air-org-skip-subtree-if-priority 65)
+		    (org-agenda-skip-if nil
+					'(scheduled deadline))))))))))
+
+(setq org-agenda-files
+      '("~/org/misc.org" "~/org/inbox.org" "~/org/journal.org" "~/org/periodic.org" "~/org/habits.org" "~/org/ripe.org" "~/org/bike.org"))
+
+(setq org-capture-templates
+   '(("t" "Todo" entry
+      (file "~/org/inbox.org")
+      "* TODO %?" :kill-buffer t)
+     ("j" "Journal" entry
+      (file+olp+datetree "~/org/journal.org")
+      "* %?%^g
+Entered on %U" :kill-buffer t)
+     ("n" "Note" entry
+      (file+headline "~/org/misc.org" "Notes")
+      "* %?%^g
+Entered on %U" :jump-to-captured t :kill-buffer t)))
+
+(setq org-id-link-to-org-use-id 'create-if-interactive)
+(setq org-id-method 'uuid)
+(setq org-refile-targets '((org-agenda-files :tag . "")))
+(setq org-todo-keyword-faces
+      '(("TODO" :foreground "red" :weight bold)
+     ("NEXT" :foreground "blue" :weight bold)
+     ("DONE" :foreground "forest green" :weight bold)
+     ("WAITING" :foreground "orange" :weight bold)
+     ("HOLD" :foreground "magenta" :weight bold)
+     ("CANCELLED" :foreground "forest green" :weight bold)
+     ("MEETING" :foreground "forest green" :weight bold)
+     ("PHONE" :foreground "forest green" :weight bold)))
+(setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+     (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING")))
