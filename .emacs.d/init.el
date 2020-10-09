@@ -98,8 +98,12 @@
   :bind (("M-x" . counsel-M-x)
 	 ("C-x b" . counsel-ibuffer)
 	 ("C-x C-f" . counsel-find-file)
+	 ("C-c c" . counsel-org-capture)
+	 :map org-mode-map
+	 ("C-c C-q" . counsel-org-tag)
 	 :map minibuffer-local-map
-	 ("C-r" . 'counsel-minibuffer-history))
+	 ("C-r" . 'counsel-minibuffer-history)
+	 ("M-RET" . 'counsel-org-tag-action))
   :config
   (setq ivy-initial-inputs-alist nil))
 
@@ -123,6 +127,7 @@
 			  :prefix "SPC"
 			  :global-prefix "C-SPC")
   (kostia/leader-keys
+   "c" '(counsel-org-capture :which-key "capture something")
    "t" '(:ignore t :which-key "toggles")
    "tt" '(counsel-load-theme :which-key "choose theme")))
 
@@ -203,6 +208,59 @@
 (use-package forge)
 
 ;; Org settings
+(defun kostia/org-mode-setup ()
+  (org-indent-mode)
+  (variable-pitch-mode 1)
+  (auto-fill-mode 0)
+  (visual-line-mode 1)
+  (setq evil-auto-indent nil))
+
+(defun kostia/org-font-setup ()
+  ;; Replace list hyphen with dot
+  (font-lock-add-keywords 'org-mode
+                          '(("^ *\\([-]\\) "
+                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+  ;; Set faces for heading levels
+  (dolist (face '((org-level-1 . 1.2)
+                  (org-level-2 . 1.1)
+                  (org-level-3 . 1.05)
+                  (org-level-4 . 1.0)
+                  (org-level-5 . 1.1)
+                  (org-level-6 . 1.1)
+                  (org-level-7 . 1.1)
+                  (org-level-8 . 1.1)))
+    (set-face-attribute (car face) nil :font "Iosevka SS08" :weight 'light :height (cdr face)))
+
+  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+
+(use-package org
+  :hook (org-mode . kostia/org-mode-setup)
+  :config
+  (setq org-ellipsis " ▾")
+  (kostia/org-font-setup)
+
+(use-package org-bullets
+  :after org
+  :hook (org-mode . org-bullets-mode)
+  :custom
+  (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+
+(defun kostia/org-mode-visual-fill ()
+  (setq visual-fill-column-width 100
+        visual-fill-column-center-text t)
+  (visual-fill-column-mode 1))
+
+(use-package visual-fill-column
+  :hook (org-mode . kostia/org-mode-visual-fill))
+
 (defun air-org-skip-subtree-if-priority (priority)
   "Skip an agenda subtree if it has a priority of PRIORITY.
 
@@ -214,6 +272,9 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
         subtree-end
       nil)))
 
+(setq org-agenda-start-with-log-mode t)
+(setq org-log-done 'time)
+(setq org-log-into-drawer t)
 (setq org-agenda-custom-commands
    '(("n" "Agenda and all TODOs"
       ((tags "PRIORITY=\"A\""
@@ -238,11 +299,11 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
       "* TODO %?" :kill-buffer t)
      ("j" "Journal" entry
       (file+olp+datetree "~/org/journal.org")
-      "* %?%^g
+      "* %?
 Entered on %U" :kill-buffer t)
      ("n" "Note" entry
       (file+headline "~/org/misc.org" "Notes")
-      "* %?%^g
+      "* %?
 Entered on %U" :jump-to-captured t :kill-buffer t)))
 
 (setq org-id-link-to-org-use-id 'create-if-interactive)
@@ -265,7 +326,7 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(forge evil-magit magit-evil magit counsel-projectile projectile hydra evil-collection evil general doom-themes helpful which-key rainbow-delimiters use-package ivy-rich ivy-omni-org doom-modeline counsel)))
+   '(visual-fill-column org-bullets org forge evil-magit magit-evil magit counsel-projectile projectile hydra evil-collection evil general doom-themes helpful which-key rainbow-delimiters use-package ivy-rich ivy-omni-org doom-modeline counsel)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
