@@ -175,6 +175,30 @@
 (kostia/leader-keys
   "ts" '(hydra-text-scale/body :which-key "scale text"))
 
+;; Projectile
+(use-package projectile
+  :diminish projectile-mode
+  :config (projectile-mode)
+  :custom ((projectile-completion-system 'ivy))
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
+  :init
+  (when (file-directory-p "~/projects")
+    (setq projectile-project-search-path '("~/projects")))
+  (setq projectile-switch-project-action #'projectile-dired))
+
+(use-package counsel-projectile
+  :config (counsel-projectile-mode))
+
+;; Magit
+(use-package magit
+  :commands (magit-status magit-get-current-branch)
+  :custom
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+(use-package evil-magit
+  :after magit)
+
 ;; Org settings
 (defun air-org-skip-subtree-if-priority (priority)
   "Skip an agenda subtree if it has a priority of PRIORITY.
@@ -238,7 +262,7 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(hydra evil-collection evil general doom-themes helpful which-key rainbow-delimiters use-package ivy-rich ivy-omni-org doom-modeline counsel)))
+   '(evil-magit magit-evil magit counsel-projectile projectile hydra evil-collection evil general doom-themes helpful which-key rainbow-delimiters use-package ivy-rich ivy-omni-org doom-modeline counsel)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
