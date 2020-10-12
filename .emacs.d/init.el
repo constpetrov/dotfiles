@@ -99,8 +99,6 @@
 	 ("C-x b" . counsel-ibuffer)
 	 ("C-x C-f" . counsel-find-file)
 	 ("C-c c" . counsel-org-capture)
-	 :map org-mode-map
-	 ("C-c C-q" . counsel-org-tag)
 	 :map minibuffer-local-map
 	 ("C-r" . 'counsel-minibuffer-history)
 	 ("M-RET" . 'counsel-org-tag-action))
@@ -127,6 +125,8 @@
 			  :prefix "SPC"
 			  :global-prefix "C-SPC")
   (kostia/leader-keys
+    "o" '(:ignore t :which-key "Org functions")
+    "os" '(org-save-all-org-buffers :which-key "Save all org buffers")
    "c" '(counsel-org-capture :which-key "capture something")
    "t" '(:ignore t :which-key "toggles")
    "tt" '(counsel-load-theme :which-key "choose theme")))
@@ -226,11 +226,11 @@
                   (org-level-2 . 1.1)
                   (org-level-3 . 1.05)
                   (org-level-4 . 1.0)
-                  (org-level-5 . 1.1)
-                  (org-level-6 . 1.1)
-                  (org-level-7 . 1.1)
-                  (org-level-8 . 1.1)))
-    (set-face-attribute (car face) nil :font "Iosevka SS08" :weight 'light :height (cdr face)))
+                  (org-level-5 . 1.0)
+                  (org-level-6 . 1.0)
+                  (org-level-7 . 1.0)
+                  (org-level-8 . 1.0)))
+    (set-face-attribute (car face) nil :font "Iosevka SS08" :weight 'regular :height (cdr face)))
 
   ;; Ensure that anything that should be fixed-pitch in Org files appears that way
   (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
@@ -246,6 +246,9 @@
   :config
   (setq org-ellipsis " ▾")
   (kostia/org-font-setup)
+  :bind (
+	 :map org-mode-map
+	 ("C-c C-q" . counsel-org-tag)))
 
 (use-package org-bullets
   :after org
@@ -308,7 +311,8 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
 
 (setq org-id-link-to-org-use-id 'create-if-interactive)
 (setq org-id-method 'uuid)
-(setq org-refile-targets '((org-agenda-files :tag . "")))
+(setq org-refile-targets '((org-agenda-files :maxlevel . 9)
+			   ("archive.org" :maxlevel . 3)))
 (setq org-todo-keyword-faces
       '(("TODO" :foreground "red" :weight bold)
      ("NEXT" :foreground "blue" :weight bold)
