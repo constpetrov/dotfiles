@@ -294,7 +294,15 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 					'(scheduled deadline))))))))))
 
 (setq org-agenda-files
-      '("~/org/misc.org" "~/org/inbox.org" "~/org/journal.org" "~/org/periodic.org" "~/org/habits.org" "~/org/ripe.org" "~/org/bike.org"))
+      '("~/org/misc.org"
+	"~/org/inbox.org"
+	"~/org/journal.org"
+	"~/org/periodic.org"
+	"~/org/habits.org"
+	"~/org/ripe.org"
+	"~/org/bike.org"
+	"~/org/language.org"
+	"~/org/home.org"))
 
 (setq org-capture-templates
    '(("t" "Todo" entry
