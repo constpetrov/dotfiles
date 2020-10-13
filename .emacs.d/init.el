@@ -264,6 +264,7 @@
 (use-package visual-fill-column
   :hook (org-mode . kostia/org-mode-visual-fill))
 
+(add-to-list 'org-modules 'org-habit t)
 (defun air-org-skip-subtree-if-priority (priority)
   "Skip an agenda subtree if it has a priority of PRIORITY.
 
@@ -302,6 +303,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 	"~/org/ripe.org"
 	"~/org/bike.org"
 	"~/org/language.org"
+	"~/org/food.org"
 	"~/org/home.org"))
 
 (setq org-capture-templates
