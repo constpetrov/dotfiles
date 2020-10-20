@@ -133,6 +133,8 @@
 
 (general-define-key
  "C-M-j" 'counsel-switch-buffer)
+(general-define-key
+ "C-c a" 'org-agenda)
 
 ;; Evil mode
 (defun kostia/evil-hook ()
@@ -213,7 +215,9 @@
   (variable-pitch-mode 1)
   (auto-fill-mode 0)
   (visual-line-mode 1)
-  (setq evil-auto-indent nil))
+  (setq evil-auto-indent nil)
+  (add-to-list 'org-modules 'org-habit t)
+  (defun air-org-skip-subtree-if-priority (priority))
 
 (defun kostia/org-font-setup ()
   ;; Replace list hyphen with dot
@@ -264,7 +268,6 @@
 (use-package visual-fill-column
   :hook (org-mode . kostia/org-mode-visual-fill))
 
-(add-to-list 'org-modules 'org-habit t)
 (defun air-org-skip-subtree-if-priority (priority)
   "Skip an agenda subtree if it has a priority of PRIORITY.
 
@@ -334,13 +337,14 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
      ("PHONE" :foreground "forest green" :weight bold)))
 (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
      (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING")))
+(use-package yaml-mode)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(visual-fill-column org-bullets org forge evil-magit magit-evil magit counsel-projectile projectile hydra evil-collection evil general doom-themes helpful which-key rainbow-delimiters use-package ivy-rich ivy-omni-org doom-modeline counsel)))
+   '(yaml-mode visual-fill-column org-bullets org forge evil-magit magit-evil magit counsel-projectile projectile hydra evil-collection evil general doom-themes helpful which-key rainbow-delimiters use-package ivy-rich ivy-omni-org doom-modeline counsel)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
