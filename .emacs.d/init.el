@@ -73,6 +73,7 @@
 (global-display-line-numbers-mode t)
 ;; Disable line numbers for some modes
 (dolist (mode '(org-mode-hook
+		org-agenda-mode-hook
 		term-mode-hook
 		shell-mode-hook
 		eshell-mode-hook))
