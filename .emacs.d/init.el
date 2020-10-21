@@ -1,4 +1,5 @@
 (setq inhibit-startup-message t)
+(setq create-lockfiles nil)
 
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
@@ -211,14 +212,79 @@
 (use-package forge)
 
 ;; Org settings
+(defun air-org-skip-subtree-if-priority (priority)
+  "Skip an agenda subtree if it has a priority of PRIORITY.
+
+PRIORITY may be one of the characters ?A, ?B, or ?C."
+  (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+        (pri-value (* 1000 (- org-lowest-priority priority)))
+        (pri-current (org-get-priority (thing-at-point 'line t))))
+    (if (= pri-value pri-current)
+        subtree-end
+      nil)))
+(setq org-agenda-custom-commands
+   '(("n" "Agenda and all TODOs"
+      ((tags "PRIORITY=\"A\""
+	     ((org-agenda-skip-function
+	       '(org-agenda-skip-entry-if 'todo 'done))
+	      (org-agenda-overriding-header "High-priority unfinished tasks:")))
+       (agenda ""
+	       ((org-agenda-span 2)))
+       (alltodo ""
+		((org-agenda-skip-function
+		  '(or
+		    (air-org-skip-subtree-if-priority 65)
+		    (org-agenda-skip-if nil
+					'(scheduled deadline))))))))))
+(setq org-agenda-start-with-log-mode t)
+(setq org-log-done 'time)
+(setq org-log-into-drawer t)
+(setq org-agenda-files
+      '("~/org/misc.org"
+	"~/org/inbox.org"
+	"~/org/journal.org"
+	"~/org/periodic.org"
+	"~/org/habits.org"
+	"~/org/ripe.org"
+	"~/org/bike.org"
+	"~/org/language.org"
+	"~/org/food.org"
+	"~/org/home.org"))
+
+(setq org-capture-templates
+   '(("t" "Todo" entry
+      (file "~/org/inbox.org")
+      "* TODO %?" :kill-buffer t)
+     ("j" "Journal" entry
+      (file+olp+datetree "~/org/journal.org")
+      "* %?
+Entered on %U" :kill-buffer t :created t)
+     ("n" "Note" entry
+      (file+headline "~/org/misc.org" "Notes")
+      "* %?
+Entered on %U" :jump-to-captured t :kill-buffer t)))
+
+(setq org-id-link-to-org-use-id 'create-if-interactive)
+(setq org-id-method 'uuid)
+(setq org-refile-targets '((org-agenda-files :maxlevel . 9)
+			   ("archive.org" :maxlevel . 3)))
+(setq org-todo-keyword-faces
+      '(("TODO" :foreground "red" :weight bold)
+     ("NEXT" :foreground "blue" :weight bold)
+     ("DONE" :foreground "forest green" :weight bold)
+     ("WAITING" :foreground "orange" :weight bold)
+     ("HOLD" :foreground "magenta" :weight bold)
+     ("CANCELLED" :foreground "forest green" :weight bold)
+     ("MEETING" :foreground "forest green" :weight bold)
+     ("PHONE" :foreground "forest green" :weight bold)))
+(setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+     (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING")))
 (defun kostia/org-mode-setup ()
   (org-indent-mode)
   (variable-pitch-mode 1)
   (auto-fill-mode 0)
   (visual-line-mode 1)
-  (setq evil-auto-indent nil)
-  (add-to-list 'org-modules 'org-habit t)
-  (defun air-org-skip-subtree-if-priority (priority))
+  (setq evil-auto-indent nil))
 
 (defun kostia/org-font-setup ()
   ;; Replace list hyphen with dot
@@ -250,6 +316,7 @@
   :hook (org-mode . kostia/org-mode-setup)
   :config
   (setq org-ellipsis " ▾")
+  (add-to-list 'org-modules 'org-habit t)
   (kostia/org-font-setup)
   :bind (
 	 :map org-mode-map
@@ -269,75 +336,20 @@
 (use-package visual-fill-column
   :hook (org-mode . kostia/org-mode-visual-fill))
 
-(defun air-org-skip-subtree-if-priority (priority)
-  "Skip an agenda subtree if it has a priority of PRIORITY.
 
-PRIORITY may be one of the characters ?A, ?B, or ?C."
-  (let ((subtree-end (save-excursion (org-end-of-subtree t)))
-        (pri-value (* 1000 (- org-lowest-priority priority)))
-        (pri-current (org-get-priority (thing-at-point 'line t))))
-    (if (= pri-value pri-current)
-        subtree-end
-      nil)))
 
-(setq org-agenda-start-with-log-mode t)
-(setq org-log-done 'time)
-(setq org-log-into-drawer t)
-(setq org-agenda-custom-commands
-   '(("n" "Agenda and all TODOs"
-      ((tags "PRIORITY=\"A\""
-	     ((org-agenda-skip-function
-	       '(org-agenda-skip-entry-if 'todo 'done))
-	      (org-agenda-overriding-header "High-priority unfinished tasks:")))
-       (agenda ""
-	       ((org-agenda-span 2)))
-       (alltodo ""
-		((org-agenda-skip-function
-		  '(or
-		    (air-org-skip-subtree-if-priority 65)
-		    (org-agenda-skip-if nil
-					'(scheduled deadline))))))))))
+;; Evil mode in org
+(use-package evil-org
+  :after org
+  :config
+  (add-hook 'org-mode-hook 'evil-org-mode)
+  (add-hook 'evil-org-mode-hook
+            (lambda ()
+              (evil-org-set-key-theme)))
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys))
 
-(setq org-agenda-files
-      '("~/org/misc.org"
-	"~/org/inbox.org"
-	"~/org/journal.org"
-	"~/org/periodic.org"
-	"~/org/habits.org"
-	"~/org/ripe.org"
-	"~/org/bike.org"
-	"~/org/language.org"
-	"~/org/food.org"
-	"~/org/home.org"))
-
-(setq org-capture-templates
-   '(("t" "Todo" entry
-      (file "~/org/inbox.org")
-      "* TODO %?" :kill-buffer t)
-     ("j" "Journal" entry
-      (file+olp+datetree "~/org/journal.org")
-      "* %?
-Entered on %U" :kill-buffer t)
-     ("n" "Note" entry
-      (file+headline "~/org/misc.org" "Notes")
-      "* %?
-Entered on %U" :jump-to-captured t :kill-buffer t)))
-
-(setq org-id-link-to-org-use-id 'create-if-interactive)
-(setq org-id-method 'uuid)
-(setq org-refile-targets '((org-agenda-files :maxlevel . 9)
-			   ("archive.org" :maxlevel . 3)))
-(setq org-todo-keyword-faces
-      '(("TODO" :foreground "red" :weight bold)
-     ("NEXT" :foreground "blue" :weight bold)
-     ("DONE" :foreground "forest green" :weight bold)
-     ("WAITING" :foreground "orange" :weight bold)
-     ("HOLD" :foreground "magenta" :weight bold)
-     ("CANCELLED" :foreground "forest green" :weight bold)
-     ("MEETING" :foreground "forest green" :weight bold)
-     ("PHONE" :foreground "forest green" :weight bold)))
-(setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-     (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING")))
+;; For YAML editing
 (use-package yaml-mode)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
