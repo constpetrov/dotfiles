@@ -1,3 +1,7 @@
 elpa
 ido.last
 bookmarks
+*.sqlite
+recentf
+transient
+*.eld
