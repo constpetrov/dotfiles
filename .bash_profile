@@ -53,3 +53,7 @@ function removeFromPath() {
   export PATH=$(echo $PATH | sed -E -e "s;:$1;;" -e "s;$1:?;;")
 }
 setjdk 1.8
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/Users/kpetrov/.sdkman"
+[[ -s "/Users/kpetrov/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/kpetrov/.sdkman/bin/sdkman-init.sh"
