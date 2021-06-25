@@ -12,7 +12,7 @@
 (setq visible-bell t)
 
 ;;Font
-(set-face-attribute 'default nil :font "Iosevka Curly Slab" :height 160)
+(set-face-attribute 'default nil :font "Iosevka Curly" :height 160)
 
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -129,6 +129,9 @@
   (kostia/leader-keys
     "o" '(:ignore t :which-key "Org functions")
     "os" '(org-save-all-org-buffers :which-key "Save all org buffers")
+    "b" '(:ignore t :which-key "Buffer functions")
+    "bk" '(kill-buffer-and-window :which-key "Kill buffer and window")
+    "bs" '(save-buffer :which-key "Save buffer")
    "c" '(counsel-org-capture :which-key "capture something")
    "t" '(:ignore t :which-key "toggles")
    "tt" '(counsel-load-theme :which-key "choose theme")))
@@ -204,7 +207,6 @@
   :commands (magit-status magit-get-current-branch)
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
-
 
 ;; Forge
 (use-package forge)
@@ -305,3 +307,16 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
 
 ;; For YAML editing
 (use-package yaml-mode)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(evil-magit yaml-mode which-key visual-fill-column use-package rainbow-delimiters org-bullets ivy-rich hydra helpful general forge evil-org evil-collection doom-themes doom-modeline counsel-projectile)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
