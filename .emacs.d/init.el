@@ -8,6 +8,10 @@
 
 (menu-bar-mode -1)
 
+;;Size of the window
+(add-to-list 'default-frame-alist '(height . 50))
+(add-to-list 'default-frame-alist '(width . 160))
+
 ;;Visible bell
 (setq visible-bell t)
 
@@ -38,6 +42,13 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+(use-package auto-package-update
+   :ensure t
+   :config
+   (setq auto-package-update-delete-old-versions t
+         auto-package-update-interval 4)
+   (auto-package-update-maybe))
+
 ;; Search and complete engine Ivy
 (use-package ivy
   :init (ivy-mode 1) ;; this will enable the mode on loading. What is in :config happens only when mode is first started.
@@ -67,7 +78,7 @@
 
 ;; Doom themes
 (use-package doom-themes
-  :init (load-theme 'doom-tomorrow-night t))
+  :init (load-theme 'doom-flatwhite t))
 
 ;; Line numbers
 (column-number-mode)
@@ -132,6 +143,9 @@
     "b" '(:ignore t :which-key "Buffer functions")
     "bk" '(kill-buffer-and-window :which-key "Kill buffer and window")
     "bs" '(save-buffer :which-key "Save buffer")
+    "bl" '(counsel-ibuffer :which-key "List buffers")
+    "f" '(:ignore t :which-key "File functions")
+    "ff" '(counsel-find-file :which-key "Find file")
    "c" '(counsel-org-capture :which-key "capture something")
    "t" '(:ignore t :which-key "toggles")
    "tt" '(counsel-load-theme :which-key "choose theme")))
@@ -239,18 +253,23 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 (setq org-agenda-start-with-log-mode t)
 (setq org-log-done 'time)
 (setq org-log-into-drawer t)
-(setq org-agenda-files
-      '("~/org/misc.org"
-	"~/org/inbox.org"
-	"~/org/journal.org"
-	"~/org/periodic.org"
-	"~/org/habits.org"
-	"~/org/ripe.org"
-	"~/org/bike.org"
-	"~/org/language.org"
-	"~/org/food.org"
-	"~/org/home.org"))
+(setq org-agenda-files (directory-files-recursively "~/org/" "\.org$"))
+;;(setq org-agenda-files
+;;      '("~/org/misc.org"
+;;	"~/org/inbox.org"
+;;	"~/org/journal.org"
+;;	"~/org/periodic.org"
+;;	"~/org/habits.org"
+;;	"~/org/ripe.org"
+;;	"~/org/bike.org"
+;;	"~/org/language.org"
+;;	"~/org/food.org"
+;;	"~/org/health.org"
+;;	"~/org/blogging.org"
+;;	"~/org/home.org"))
 
+(setq org-image-actual-width nil)
+(setq org-startup-with-inline-images t)
 (setq org-capture-templates
    '(("t" "Todo" entry
       (file "~/org/inbox.org")
@@ -282,7 +301,21 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
 (defun kostia/org-mode-setup ()
   (auto-fill-mode 0)
   (visual-line-mode 1)
-  (setq evil-auto-indent nil))
+  (setq evil-auto-indent nil)
+
+;; For saving files after inserting links
+  (defun save-after-link-store ()
+    (interactive)
+    (call-interactively 'org-store-link)
+    (save-buffer))
+  (global-set-key (kbd "C-c l") 'save-after-link-store)
+
+  (define-key org-mode-map (kbd "C-c C-l") nil)
+  (defun save-after-insert-link ()
+    (interactive)
+    (call-interactively 'org-insert-link)
+    (save-buffer))
+  (global-set-key (kbd "C-c C-l") 'save-after-insert-link))
 
 (use-package org
   :hook (org-mode . kostia/org-mode-setup)
@@ -292,6 +325,7 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
   :bind (
 	 :map org-mode-map
 	 ("C-c C-q" . counsel-org-tag)))
+
 
 
 ;; Evil mode in org
@@ -305,15 +339,52 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
 
+;; Installing and setting org-roam
+(use-package org-roam
+  :ensure t
+  :after org
+  :hook
+  (after-init . org-roam-mode)
+  :custom
+  (org-roam-directory (file-truename "~/org"))
+  :config
+  (setq org-roam-link-use-custom-faces t)
+  :bind (:map org-roam-mode-map
+              (("C-c n l" . org-roam)
+               ("C-c n f" . org-roam-find-file)
+               ("C-c n g" . org-roam-graph))
+              :map org-mode-map
+              (("C-c n i" . org-roam-insert)
+               ("C-c n I" . org-roam-insert-immediate))))
+
+(defun make-orgcapture-frame ()
+  "Create a new frame and run org-capture."
+  (interactive)
+  (make-frame '((name . "remember") (width . 80) (height . 16)
+                (top . 400) (left . 300)
+                (font . "-apple-Monaco-medium-normal-normal-*-13-*-*-*-m-0-iso10646-1")
+                ))
+  (select-frame-by-name "remember")
+  (org-capture))
+
 ;; For YAML editing
 (use-package yaml-mode)
+
+;; For sml-nj, coursera course on programming languages, part A
+(use-package sml-mode
+  :config
+  (setenv "PATH" (concat "/usr/local/smlnj/bin:" (getenv "PATH")))
+  (setq exec-path (cons "/usr/local/smlnj/bin" exec-path)))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(org-agenda-files
+   '("~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/20210719223813-new_testing_task.org" "~/org/20210719221928-first_note_in_roam.org" "~/org/20210719223028-testing_task.org" "~/org/Zoom.org" "~/org/archive.org" "~/org/bike.org" "~/org/blogging.org" "~/org/checklist.org" "~/org/documents.org" "~/org/food.org" "~/org/habits.org" "~/org/health.org" "~/org/home.org" "~/org/inbox.org" "~/org/init.org" "~/org/journal.org" "~/org/language.org" "~/org/misc.org" "~/org/my_family.org" "~/org/periodic.org" "~/org/ripe.org") t)
  '(package-selected-packages
-   '(evil-magit yaml-mode which-key visual-fill-column use-package rainbow-delimiters org-bullets ivy-rich hydra helpful general forge evil-org evil-collection doom-themes doom-modeline counsel-projectile)))
+   '(auto-package-update sml-mode evil-magit yaml-mode which-key visual-fill-column use-package rainbow-delimiters org-bullets ivy-rich hydra helpful general forge evil-org evil-collection doom-themes doom-modeline counsel-projectile)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
