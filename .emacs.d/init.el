@@ -23,6 +23,7 @@
 
 ;; Add russian layout in emacs, independent from system
 (setq default-input-method "russian-computer")
+(setq org-roam-v2-ack t)
 
 ;; Initialize package sources
 (require 'package)
@@ -353,8 +354,8 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
   :custom
   (org-roam-directory (file-truename "~/org"))
   :config
+  (org-roam-db-autosync-mode)
   (setq org-roam-link-use-custom-faces t)
-  (setq org-roam-v2-ack t)
   :bind (:map org-roam-mode-map
               (("C-c n l" . org-roam)
                ("C-c n f" . org-roam-node-find)
