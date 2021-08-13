@@ -146,9 +146,14 @@
     "bl" '(counsel-ibuffer :which-key "List buffers")
     "f" '(:ignore t :which-key "File functions")
     "ff" '(counsel-find-file :which-key "Find file")
-   "c" '(counsel-org-capture :which-key "capture something")
-   "t" '(:ignore t :which-key "toggles")
-   "tt" '(counsel-load-theme :which-key "choose theme")))
+    "c" '(counsel-org-capture :which-key "capture something")
+    "n" '(:ignore t :which-key "Roam")
+    "ni" '(org-roam-node-insert :which-key "Insert node")
+    "nf" '(org-roam-node-find :which-key "Find node")
+    "nc" '(org-roam-capture :which-key "Capture")
+    "nt" '(org-roam-buffer-toggle :which-key "Toggle buffer")
+    "t" '(:ignore t :which-key "toggles")
+    "tt" '(counsel-load-theme :which-key "choose theme")))
 
 (general-define-key
  "C-M-j" 'counsel-switch-buffer)
@@ -349,13 +354,13 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
   (org-roam-directory (file-truename "~/org"))
   :config
   (setq org-roam-link-use-custom-faces t)
+  (setq org-roam-v2-ack t)
   :bind (:map org-roam-mode-map
               (("C-c n l" . org-roam)
-               ("C-c n f" . org-roam-find-file)
+               ("C-c n f" . org-roam-node-find)
                ("C-c n g" . org-roam-graph))
               :map org-mode-map
-              (("C-c n i" . org-roam-insert)
-               ("C-c n I" . org-roam-insert-immediate))))
+              (("C-c n i" . org-roam-node-insert))))
 
 (defun make-orgcapture-frame ()
   "Create a new frame and run org-capture."
