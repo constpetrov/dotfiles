@@ -251,7 +251,8 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
        (agenda ""
 	       ((org-agenda-span 2)))
        (alltodo ""
-		((org-agenda-skip-function
+		((org-agenda-sorting-strategy '(todo-state-up))
+		 (org-agenda-skip-function
 		  '(or
 		    (air-org-skip-subtree-if-priority 65)
 		    (org-agenda-skip-if nil
@@ -388,7 +389,7 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(org-agenda-files
-   '("~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/20210719223813-new_testing_task.org" "~/org/20210719221928-first_note_in_roam.org" "~/org/20210719223028-testing_task.org" "~/org/Zoom.org" "~/org/archive.org" "~/org/bike.org" "~/org/blogging.org" "~/org/checklist.org" "~/org/documents.org" "~/org/food.org" "~/org/habits.org" "~/org/health.org" "~/org/home.org" "~/org/inbox.org" "~/org/init.org" "~/org/journal.org" "~/org/language.org" "~/org/misc.org" "~/org/my_family.org" "~/org/periodic.org" "~/org/ripe.org") t)
+   '("/Users/kpetrov/org/Zoom.org" "/Users/kpetrov/org/archive.org" "/Users/kpetrov/org/bike.org" "/Users/kpetrov/org/blogging.org" "/Users/kpetrov/org/checklist.org" "/Users/kpetrov/org/documents.org" "/Users/kpetrov/org/food.org" "/Users/kpetrov/org/habits.org" "/Users/kpetrov/org/health.org" "/Users/kpetrov/org/home.org" "/Users/kpetrov/org/inbox.org" "/Users/kpetrov/org/init.org" "/Users/kpetrov/org/journal.org" "/Users/kpetrov/org/language.org" "/Users/kpetrov/org/misc.org" "/Users/kpetrov/org/my_family.org" "/Users/kpetrov/org/periodic.org" "/Users/kpetrov/org/ripe.org"))
  '(package-selected-packages
    '(auto-package-update sml-mode evil-magit yaml-mode which-key visual-fill-column use-package rainbow-delimiters org-bullets ivy-rich hydra helpful general forge evil-org evil-collection doom-themes doom-modeline counsel-projectile)))
 (custom-set-faces
