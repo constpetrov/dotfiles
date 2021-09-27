@@ -80,7 +80,7 @@
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 10)
-	   (doom-modeline-minor-modes t)))
+	   (doom-modeline-enable-word-count t)))
 
 ;; Doom themes
 (use-package doom-themes
