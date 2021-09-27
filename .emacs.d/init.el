@@ -36,6 +36,10 @@
 (unless package-archive-contents
   (package-refresh-contents))
 
+;; Add my own directory with packages
+(add-to-list 'load-path "~/projects/emacs/wc-mode/")
+(require 'wc-mode)
+
 ;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
@@ -75,7 +79,8 @@
 ;; Modeline
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
-  :custom ((doom-modeline-height 10)))
+  :custom ((doom-modeline-height 10)
+	   (doom-modeline-minor-modes t)))
 
 ;; Doom themes
 (use-package doom-themes
@@ -303,8 +308,8 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
 	("CANCELLED" :foreground "forest green" :weight bold)
 	("MEETING" :foreground "forest green" :weight bold)
 	("PHONE" :foreground "forest green" :weight bold)))
-(setq org-todo-keywords '((sequence "NEXT(n)" "TODO(t)" "|" "DONE(d)")
-     (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING")))
+(setq org-todo-keywords '((sequence "TODO(t)" "|" "DONE(d)")
+     (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")))
 (defun kostia/org-mode-setup ()
   (auto-fill-mode 0)
   (visual-line-mode 1)
@@ -333,7 +338,8 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
 	 :map org-mode-map
 	 ("C-c C-q" . counsel-org-tag)))
 
-
+;; Use wc-mode in org
+(add-hook 'org-mode-hook 'wc-mode)
 
 ;; Evil mode in org
 (use-package evil-org
