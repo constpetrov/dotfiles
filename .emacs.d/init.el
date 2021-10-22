@@ -202,6 +202,11 @@
   :config
   (evil-collection-init))
 
+(use-package evil-surround
+  :ensure t
+  :config
+  (global-evil-surround-mode 1))
+
 ;; Hydra
 (use-package hydra)
 (defhydra hydra-text-scale (:timeout 4)
@@ -397,7 +402,7 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
  '(org-agenda-files
    '("/Users/kpetrov/org/Zoom.org" "/Users/kpetrov/org/archive.org" "/Users/kpetrov/org/bike.org" "/Users/kpetrov/org/blogging.org" "/Users/kpetrov/org/checklist.org" "/Users/kpetrov/org/documents.org" "/Users/kpetrov/org/food.org" "/Users/kpetrov/org/habits.org" "/Users/kpetrov/org/health.org" "/Users/kpetrov/org/home.org" "/Users/kpetrov/org/inbox.org" "/Users/kpetrov/org/init.org" "/Users/kpetrov/org/journal.org" "/Users/kpetrov/org/language.org" "/Users/kpetrov/org/misc.org" "/Users/kpetrov/org/my_family.org" "/Users/kpetrov/org/periodic.org" "/Users/kpetrov/org/ripe.org"))
  '(package-selected-packages
-   '(auto-package-update sml-mode evil-magit yaml-mode which-key visual-fill-column use-package rainbow-delimiters org-bullets ivy-rich hydra helpful general forge evil-org evil-collection doom-themes doom-modeline counsel-projectile)))
+   '(evil-surround auto-package-update sml-mode evil-magit yaml-mode which-key visual-fill-column use-package rainbow-delimiters org-bullets ivy-rich hydra helpful general forge evil-org evil-collection doom-themes doom-modeline counsel-projectile)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
