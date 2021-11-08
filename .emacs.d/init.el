@@ -365,15 +365,21 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
   (after-init . org-roam-mode)
   :custom
   (org-roam-directory (file-truename "~/org"))
+  (org-roam-completion-everywhere t)
+  (org-roam-capture-templates
+   '(("d" "default" plain
+      "%?"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+      :unnarrowed t)))
   :config
   (org-roam-db-autosync-mode)
   (setq org-roam-link-use-custom-faces t)
-  :bind (:map org-roam-mode-map
-              (("C-c n l" . org-roam)
-               ("C-c n f" . org-roam-node-find)
-               ("C-c n g" . org-roam-graph))
-              :map org-mode-map
-              (("C-c n i" . org-roam-node-insert))))
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n g" . org-roam-graph)
+	 ("C-c n i" . org-roam-node-insert)
+         :map org-mode-map
+         ("C-M-i"   . completion-at-point)))
 
 (defun make-orgcapture-frame ()
   "Create a new frame and run org-capture."
