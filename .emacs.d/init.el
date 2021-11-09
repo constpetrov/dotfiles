@@ -373,13 +373,19 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
       :unnarrowed t)))
   :config
   (org-roam-db-autosync-mode)
+  (require 'org-roam-dailies)
   (setq org-roam-link-use-custom-faces t)
   :bind (("C-c n l" . org-roam-buffer-toggle)
          ("C-c n f" . org-roam-node-find)
          ("C-c n g" . org-roam-graph)
 	 ("C-c n i" . org-roam-node-insert)
          :map org-mode-map
-         ("C-M-i"   . completion-at-point)))
+         ("C-M-i" . completion-at-point)
+	 :map org-roam-dailies-map
+	 ("Y" . org-roam-dailies-capture-yesterday)
+	 ("T" . org-roam-dailies-capture-tomorrow))
+  :bind-keymap
+  ("C-c n d" . org-roam-dailies-map))
 
 (defun make-orgcapture-frame ()
   "Create a new frame and run org-capture."
