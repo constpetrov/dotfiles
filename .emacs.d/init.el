@@ -332,7 +332,8 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
 ;;    (interactive)
 ;;    (call-interactively 'org-insert-link)
 ;;    (save-buffer))
-;;  (global-set-key (kbd "C-c C-l") 'save-after-insert-link))
+;;  (global-set-key (kbd "C-c C-l") 'save-after-insert-link)
+)
 
 (use-package org
   :hook (org-mode . kostia/org-mode-setup)
