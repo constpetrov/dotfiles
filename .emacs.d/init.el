@@ -370,7 +370,13 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
    '(("d" "default" plain
       "%?"
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-      :unnarrowed t)))
+      :unnarrowed t)
+     ("b" "book notes" plain
+      (file "~/org/templates/book_notes.org")
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :book:книга:")
+      :unnarrowed t)
+     )
+   )
   :config
   (org-roam-db-autosync-mode)
   (require 'org-roam-dailies)
