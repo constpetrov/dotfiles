@@ -321,18 +321,18 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
   (setq evil-auto-indent nil)
 
 ;; For saving files after inserting links
-  (defun save-after-link-store ()
-    (interactive)
-    (call-interactively 'org-store-link)
-    (save-buffer))
-  (global-set-key (kbd "C-c l") 'save-after-link-store)
-
-  (define-key org-mode-map (kbd "C-c C-l") nil)
-  (defun save-after-insert-link ()
-    (interactive)
-    (call-interactively 'org-insert-link)
-    (save-buffer))
-  (global-set-key (kbd "C-c C-l") 'save-after-insert-link))
+;;  (defun save-after-link-store ()
+;;    (interactive)
+;;    (call-interactively 'org-store-link)
+;;    (save-buffer))
+;;  (global-set-key (kbd C-c l") 'save-after-link-store)
+;;
+;;  (define-key org-mode-map (kbd "C-c C-l") nil)
+;;  (defun save-after-insert-link ()
+;;    (interactive)
+;;    (call-interactively 'org-insert-link)
+;;    (save-buffer))
+;;  (global-set-key (kbd "C-c C-l") 'save-after-insert-link))
 
 (use-package org
   :hook (org-mode . kostia/org-mode-setup)
