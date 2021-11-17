@@ -270,7 +270,8 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 (setq org-agenda-start-with-log-mode t)
 (setq org-log-done 'time)
 (setq org-log-into-drawer t)
-(setq org-agenda-files (directory-files-recursively "~/org/" "\.org$"))
+(setq org-agenda-files '("~/org/"))
+;;(setq org-agenda-files (directory-files-recursively "~/org/" "\.org$"))
 ;;(setq org-agenda-files
 ;;      '("~/org/misc.org"
 ;;	"~/org/inbox.org"
@@ -422,8 +423,6 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-files
-   '("/Users/kpetrov/org/Zoom.org" "/Users/kpetrov/org/archive.org" "/Users/kpetrov/org/bike.org" "/Users/kpetrov/org/blogging.org" "/Users/kpetrov/org/checklist.org" "/Users/kpetrov/org/documents.org" "/Users/kpetrov/org/food.org" "/Users/kpetrov/org/habits.org" "/Users/kpetrov/org/health.org" "/Users/kpetrov/org/home.org" "/Users/kpetrov/org/inbox.org" "/Users/kpetrov/org/init.org" "/Users/kpetrov/org/journal.org" "/Users/kpetrov/org/language.org" "/Users/kpetrov/org/misc.org" "/Users/kpetrov/org/my_family.org" "/Users/kpetrov/org/periodic.org" "/Users/kpetrov/org/ripe.org"))
  '(package-selected-packages
    '(evil-surround auto-package-update sml-mode evil-magit yaml-mode which-key visual-fill-column use-package rainbow-delimiters org-bullets ivy-rich hydra helpful general forge evil-org evil-collection doom-themes doom-modeline counsel-projectile)))
 (custom-set-faces
