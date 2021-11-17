@@ -379,7 +379,7 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
       :unnarrowed t)
      ("p" "project" plain
       (file "~/org/templates/project.org")
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :project:")
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: ${title}\n#+filetags: :project:")
       :unnarrowed t)
      )
    )
@@ -417,17 +417,3 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
   :config
   (setenv "PATH" (concat "/usr/local/smlnj/bin:" (getenv "PATH")))
   (setq exec-path (cons "/usr/local/smlnj/bin" exec-path)))
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(evil-surround auto-package-update sml-mode evil-magit yaml-mode which-key visual-fill-column use-package rainbow-delimiters org-bullets ivy-rich hydra helpful general forge evil-org evil-collection doom-themes doom-modeline counsel-projectile)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
