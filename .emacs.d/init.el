@@ -25,11 +25,24 @@
 (setq default-input-method "russian-computer")
 (setq org-roam-v2-ack t)
 
+;; using straight.el for package management
+(defvar bootstrap-version)
+(let ((bootstrap-file
+      (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+        "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+        'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
 ;; Initialize package sources
 (require 'package)
 
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-			 ("org" . "https://orgmode.org/elpa/")
 			 ("elpa" . "https://elpa.gnu.org/packages/")))
 
 (package-initialize)
@@ -51,7 +64,7 @@
    :ensure t
    :config
    (setq auto-package-update-delete-old-versions t
-         auto-package-update-interval 4)
+         auto-package-update-interval 14)
    (auto-package-update-maybe))
 
 ;; Search and complete engine Ivy
@@ -337,6 +350,7 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
 )
 
 (use-package org
+  :straight t
   :hook (org-mode . kostia/org-mode-setup)
   :config
   (setq org-ellipsis " ▾")
