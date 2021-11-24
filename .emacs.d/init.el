@@ -15,6 +15,8 @@
 ;;Visible bell
 (setq visible-bell t)
 
+;;Auto revert buffers
+(setq global-auto-revert-mode t)
 ;;Font
 (set-face-attribute 'default nil :font "Iosevka Curly" :height 160)
 
