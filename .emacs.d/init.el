@@ -173,6 +173,8 @@
     "nf" '(org-roam-node-find :which-key "Find node")
     "nc" '(org-roam-capture :which-key "Capture")
     "nt" '(org-roam-buffer-toggle :which-key "Toggle buffer")
+    "ndn" '(org-roam-dailies-capture-today :which-key "Capture today")
+    "ndd" '(org-roam-dailies-goto-today :which-key "Go to today")
     "t" '(:ignore t :which-key "toggles")
     "tt" '(counsel-load-theme :which-key "choose theme")))
 
@@ -401,7 +403,7 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
   :config
   (setq org-ellipsis " ▾")
   (add-to-list 'org-modules 'org-habit t)
-  (kostia/org-font-setup)
+  ;;(kostia/org-font-setup)
   :bind (
 	 :map org-mode-map
 	 ("C-c C-q" . counsel-org-tag)))
@@ -422,7 +424,7 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
 
 ;; Installing and setting org-roam
 (use-package org-roam
-  :ensure t
+  :straight t
   :after org
   :hook
   (after-init . org-roam-mode)
