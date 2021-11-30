@@ -18,7 +18,7 @@
 ;;Auto revert buffers
 (setq global-auto-revert-mode t)
 ;;Font
-(set-face-attribute 'default nil :font "Iosevka Curly" :height 160)
+(set-face-attribute 'default nil :font "Iosevka SS08" :height 160)
 
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -340,33 +340,6 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
   (visual-line-mode 1)
   (setq evil-auto-indent nil)
 
-;; Font setup
-(defun kostia/org-font-setup ()
-   ;; Replace list hyphen with dot
-   (font-lock-add-keywords 'org-mode
-                           '(("^ *\\([-]\\) "
-                              (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-
-;; Set faces for heading levels
-(dolist (face '((org-level-1 . 1.2)
-                (org-level-2 . 1.1)
-                (org-level-3 . 1.05)
-                (org-level-4 . 1.0)
-                (org-level-5 . 1.0)
-                (org-level-6 . 1.0)
-                (org-level-7 . 1.0)
-                (org-level-8 . 1.0)))
-  (set-face-attribute (car face) nil :font "Iosevka SS08" :weight 'regular :height (cdr face)))
-
-;; Ensure that anything that should be fixed-pitch in Org files appears that way
-(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-(set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-(set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
-(set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-(set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-(set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
-
 ;; Bullets
 (use-package org-bullets
    :after org
@@ -403,11 +376,42 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
   :config
   (setq org-ellipsis " ▾")
   (add-to-list 'org-modules 'org-habit t)
-  ;;(kostia/org-font-setup)
+  (kostia/org-font-setup)
   :bind (
 	 :map org-mode-map
 	 ("C-c C-q" . counsel-org-tag)))
 
+(defun kostia/org-font-setup ()
+;; Replace list hyphen with dot
+(font-lock-add-keywords 'org-mode
+                        '(("^ *\\([-]\\) "
+                          (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+(dolist (face '((org-level-1 . 1.2)
+                (org-level-2 . 1.1)
+                (org-level-3 . 1.05)
+                (org-level-4 . 1.0)
+                (org-level-5 . 1.1)
+                (org-level-6 . 1.1)
+                (org-level-7 . 1.1)
+                (org-level-8 . 1.1)))
+    (set-face-attribute (car face) nil :font "Iosevka Curly Slab" :weight 'regular :height (cdr face)))
+
+
+;; Make sure org-indent face is available
+(require 'org-indent)
+
+;; Ensure that anything that should be fixed-pitch in Org files appears that way
+(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
+(set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-drawer nil   :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-property-value nil   :inherit 'fixed-pitch)
+)
 ;; Use wc-mode in org
 (add-hook 'org-mode-hook 'wc-mode)
 
