@@ -1,6 +1,6 @@
 (setq inhibit-startup-message t)
 (setq create-lockfiles nil)
-
+(setq initial-major-mode 'lisp-interaction-mode)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (tooltip-mode -1)
@@ -68,6 +68,86 @@
    (setq auto-package-update-delete-old-versions t
          auto-package-update-interval 14)
    (auto-package-update-maybe))
+
+;; Use undo-tree
+(use-package undo-tree
+  :init (global-undo-tree-mode))
+ 
+;; This solution is for filtering agenda files so only files with todo items are in the list.
+(defun kostia-vulpea-setup ()
+  (defun vulpea-project-p ()
+    "Return non-nil if current buffer has any todo entry.
+  TODO entries marked as done are ignored, meaning the this
+  function returns nil if current buffer contains only completed
+  tasks."
+    (seq-find                                 ; (3)
+     (lambda (type)
+       (eq type 'todo))
+     (org-element-map                         ; (2)
+         (org-element-parse-buffer 'headline) ; (1)
+         'headline
+       (lambda (h)
+         (org-element-property :todo-type h)))))
+  
+  (defun vulpea-project-update-tag ()
+      "Update PROJECT tag in the current buffer."
+      (when (and (not (active-minibuffer-window))
+                 (vulpea-buffer-p))
+        (save-excursion
+          (goto-char (point-min))
+          (let* ((tags (vulpea-buffer-tags-get))
+                 (original-tags tags))
+            (if (vulpea-project-p)
+                (setq tags (cons "project" tags))
+              (setq tags (remove "project" tags)))
+  
+            ;; cleanup duplicates
+            (setq tags (seq-uniq tags))
+  
+            ;; update tags if changed
+            (when (or (seq-difference tags original-tags)
+                      (seq-difference original-tags tags))
+              (apply #'vulpea-buffer-tags-set tags))))))
+  
+  (defun vulpea-buffer-p ()
+    "Return non-nil if the currently visited buffer is a note."
+    (and buffer-file-name
+         (string-prefix-p
+          (expand-file-name (file-name-as-directory org-roam-directory))
+          (file-name-directory buffer-file-name))))
+  
+  (defun vulpea-project-files ()
+      "Return a list of note files containing 'project' tag." ;
+      (seq-uniq
+       (seq-map
+        #'car
+        (org-roam-db-query
+         [:select [nodes:file]
+          :from tags
+          :left-join nodes
+          :on (= tags:node-id nodes:id)
+          :where (like tag (quote "%\"project\"%"))]))))
+  
+  (defun vulpea-agenda-files-update (&rest _)
+    "Update the value of `org-agenda-files'."
+    (setq org-agenda-files (vulpea-project-files)))
+  
+  (add-hook 'find-file-hook #'vulpea-project-update-tag)
+  (add-hook 'before-save-hook #'vulpea-project-update-tag)
+  
+  (advice-add 'org-agenda :before #'vulpea-agenda-files-update)
+  (advice-add 'org-todo-list :before #'vulpea-agenda-files-update)
+)
+
+;; Vulpea lib
+(use-package vulpea
+  :ensure t
+  :commands (vulpea-buffer-tags-get)
+  :after org-roam
+  :hook ((org-roam-db-autosync-mode . vulpea-db-autosync-mode))
+  :config
+  (add-to-list 'org-tags-exclude-from-inheritance "project")
+  (kostia-vulpea-setup))
 
 ;; Search and complete engine Ivy
 (use-package ivy
@@ -202,6 +282,7 @@
   (setq evil-want-keybinding nil)
   (setq evil-want-C-u-scroll t)
   (setq evil-want-C-i-jump nil)
+  (setq evil-undo-system 'undo-tree)
   (evil-mode 1)
   :hook (evil-mode . kostia/evil-hook)
   :config
@@ -287,7 +368,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 (setq org-agenda-start-with-log-mode t)
 (setq org-log-done 'time)
 (setq org-log-into-drawer t)
-(setq org-agenda-files '("~/org/"))
+;;(setq org-agenda-files '("~/org/"))
 ;;(setq org-agenda-files (directory-files-recursively "~/org/" "\.org$"))
 ;;(setq org-agenda-files
 ;;      '("~/org/misc.org"
@@ -370,17 +451,6 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
   (global-set-key (kbd "C-c C-l") 'save-after-insert-link)
 )
 
-(use-package org
-  :straight t
-  :hook (org-mode . kostia/org-mode-setup)
-  :config
-  (setq org-ellipsis " ▾")
-  (add-to-list 'org-modules 'org-habit t)
-  (kostia/org-font-setup)
-  :bind (
-	 :map org-mode-map
-	 ("C-c C-q" . counsel-org-tag)))
-
 (defun kostia/org-font-setup ()
 ;; Replace list hyphen with dot
 (font-lock-add-keywords 'org-mode
@@ -412,6 +482,17 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
 (set-face-attribute 'org-drawer nil   :inherit '(shadow fixed-pitch))
 (set-face-attribute 'org-property-value nil   :inherit 'fixed-pitch)
 )
+(use-package org
+  :straight t
+  :hook (org-mode . kostia/org-mode-setup)
+  :config
+  (setq org-ellipsis " ▾")
+  (add-to-list 'org-modules 'org-habit t)
+  (kostia/org-font-setup)
+  :bind (
+	 :map org-mode-map
+	 ("C-c C-q" . counsel-org-tag)))
+
 ;; Use wc-mode in org
 (add-hook 'org-mode-hook 'wc-mode)
 
@@ -430,8 +511,8 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
 (use-package org-roam
   :straight t
   :after org
-  :hook
-  (after-init . org-roam-mode)
+  ;:hook
+  ;(after-init . org-roam-mode)
   :custom
   (org-roam-directory (file-truename "~/org"))
   (org-roam-completion-everywhere t)
@@ -475,6 +556,14 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
                 ))
   (select-frame-by-name "remember")
   (org-capture))
+
+
+;; Org download
+(use-package org-download
+  :config
+  (setq org-download-method 'directory)
+  (setq-default org-download-image-dir "./pictures")
+  (setq-default org-download-heading-lvl 0))
 
 ;; For YAML editing
 (use-package yaml-mode)
