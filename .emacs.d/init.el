@@ -180,8 +180,24 @@
 	   (doom-modeline-enable-word-count t)))
 
 ;; Doom themes
-(use-package doom-themes
-  :init (load-theme 'doom-flatwhite t))
+;;(use-package doom-themes
+  ;;:init (load-theme 'doom-flatwhite t))
+
+;; Modus themes
+(use-package modus-themes
+  :ensure t
+  :init
+  ;; Add all your customizations prior to loading the themes
+  (setq modus-themes-italic-constructs t
+        modus-themes-bold-constructs nil
+        modus-themes-region '(bg-only no-extend))
+
+  ;; Load the theme files before enabling a theme
+  (modus-themes-load-themes)
+  :config
+  ;; Load the theme of your choice:
+  (modus-themes-load-operandi) ;; OR (modus-themes-load-vivendi)
+  :bind ("<f5>" . modus-themes-toggle))
 
 ;; Line numbers
 (column-number-mode)
@@ -355,7 +371,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 	      (org-agenda-overriding-header "High-priority unfinished tasks:")))
        (agenda ""
 	       ((org-agenda-span 2)))
-       (alltodo ""
+       (tags-todo "1week"
 		((org-agenda-sorting-strategy '(todo-state-up))
 		 (org-agenda-skip-function
 		  '(or
