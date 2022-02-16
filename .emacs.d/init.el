@@ -433,6 +433,7 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
   (auto-fill-mode 0)
   (visual-line-mode 1)
   (setq evil-auto-indent nil)
+  (setq org-startup-indented t)
 
 ;; Bullets
 (use-package org-bullets
@@ -472,7 +473,7 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
 (let* ((variable-tuple
-          (cond ((x-list-fonts "Georgia")         '(:font "Georgia"))
+          (cond ((x-list-fonts "PT Serif")         '(:font "PT Serif"))
                 ((x-list-fonts "Iosevka SS08") '(:font "Iosevka SS08"))
                 ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
                 ((x-list-fonts "Verdana")         '(:font "Verdana"))
@@ -495,7 +496,7 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
 
 (custom-theme-set-faces
    'user
-   '(variable-pitch ((t (:family "Georgia" :height 180 :weight thin))))
+   '(variable-pitch ((t (:family "PT Serif" :height 180 :weight thin))))
    '(fixed-pitch ((t ( :family "Iosevka SS08" :height 160)))))
 
 (add-hook 'org-mode-hook 'variable-pitch-mode)
