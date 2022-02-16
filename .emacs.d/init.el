@@ -142,12 +142,14 @@
 ;; Vulpea lib
 (use-package vulpea
   :ensure t
+  :demand t
   :commands (vulpea-buffer-tags-get)
+  :init (kostia-vulpea-setup)
   :after org-roam
   :hook ((org-roam-db-autosync-mode . vulpea-db-autosync-mode))
   :config
   (add-to-list 'org-tags-exclude-from-inheritance "project")
-  (kostia-vulpea-setup))
+  )
 
 ;; Search and complete engine Ivy
 (use-package ivy
@@ -257,11 +259,6 @@
     "ndd" '(org-roam-dailies-goto-today :which-key "Go to today")
     "t" '(:ignore t :which-key "toggles")
     "tt" '(counsel-load-theme :which-key "choose theme")))
-
-(general-define-key
- "C-M-j" 'counsel-switch-buffer)
-(general-define-key
- "C-c a" 'org-agenda)
 
 ;; Evil mode
 (defun kostia/evil-hook ()
@@ -424,6 +421,7 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
 ;; Bullets
 (use-package org-bullets
    :after org
+   :demand t
    :hook (org-mode . org-bullets-mode)
    :custom
    (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
@@ -511,8 +509,7 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
 (use-package org-roam
   :straight t
   :after org
-  ;:hook
-  ;(after-init . org-roam-mode)
+  :demand t
   :custom
   (org-roam-directory (file-truename "~/org"))
   (org-roam-completion-everywhere t)
@@ -539,13 +536,15 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
          ("C-c n f" . org-roam-node-find)
          ("C-c n g" . org-roam-graph)
 	 ("C-c n i" . org-roam-node-insert)
+	 ("C-c a" . org-agenda)
          :map org-mode-map
          ("C-M-i" . completion-at-point)
 	 :map org-roam-dailies-map
 	 ("Y" . org-roam-dailies-capture-yesterday)
 	 ("T" . org-roam-dailies-capture-tomorrow))
   :bind-keymap
-  ("C-c n d" . org-roam-dailies-map))
+  ("C-c n d" . org-roam-dailies-map)
+  )
 
 (defun make-orgcapture-frame ()
   "Create a new frame and run org-capture."
