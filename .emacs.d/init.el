@@ -386,14 +386,14 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 (setq org-startup-with-inline-images t)
 (setq org-capture-templates
    '(("t" "Todo" entry
-      (file "~/org/inbox.org")
+      (file "~/Dropbox/org/inbox.org")
       "* TODO %?" :kill-buffer t)
      ("j" "Journal" entry
-      (file+olp+datetree "~/org/journal.org")
+      (file+olp+datetree "~/Dropbox/org/journal.org")
       "* %?
 Entered on %U" :kill-buffer t :created t)
      ("n" "Note" entry
-      (file+headline "~/org/misc.org" "Notes")
+      (file+headline "~/Dropbox/org/misc.org" "Notes")
       "* %?
 Entered on %U" :jump-to-captured t :kill-buffer t)))
 
@@ -537,7 +537,7 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
   :after org
   :demand t
   :custom
-  (org-roam-directory (file-truename "~/org"))
+  (org-roam-directory (file-truename "~/Dropbox/org"))
   (org-roam-completion-everywhere t)
   (org-roam-capture-templates
    '(("d" "default" plain
@@ -545,11 +545,11 @@ Entered on %U" :jump-to-captured t :kill-buffer t)))
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
       :unnarrowed t)
      ("b" "book notes" plain
-      (file "~/org/templates/book_notes.org")
+      (file "~/Dropbox/org/templates/book_notes.org")
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :book:книга:")
       :unnarrowed t)
      ("p" "project" plain
-      (file "~/org/templates/project.org")
+      (file "~/Dropbox/org/templates/project.org")
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: ${title}\n#+filetags: :project:")
       :unnarrowed t)
      )
