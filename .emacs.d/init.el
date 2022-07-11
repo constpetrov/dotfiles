@@ -62,12 +62,13 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-(use-package auto-package-update
-   :ensure t
-   :config
-   (setq auto-package-update-delete-old-versions t
-         auto-package-update-interval 14)
-   (auto-package-update-maybe))
+;; Auto-update - it works not very well, some things could get broken
+;;(use-package auto-package-update
+;;   :ensure t
+;;   :config
+;;   (setq auto-package-update-delete-old-versions t
+;;         auto-package-update-interval 14)
+;;   (auto-package-update-maybe))
 
 ;; Use undo-tree
 (use-package undo-tree
