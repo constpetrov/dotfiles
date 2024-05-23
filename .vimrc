@@ -30,7 +30,7 @@ let g:vimwiki_list = [{'path': '~/own/mywiki/', 'syntax': 'markdown', 'ext': '.m
 
 " Language switcher
 let g:russian = 0
-#set spell spelllang=en_gb
+"set spell spelllang=en_gb
 
 function! Toggle_Keymap()
     if g:russian == 0
